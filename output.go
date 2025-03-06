@@ -118,9 +118,10 @@ func (t *Terminal) handleOutput(buf []byte) []byte {
 			continue
 		}
 		if r == utf8.RuneError && size == 1 {
-			return buf
+			leftOver := make([]byte, len(buf))
+			copy(leftOver, buf)
+			return leftOver
 		}
-
 		if r == asciiEscape {
 			t.state.esc = i
 			continue

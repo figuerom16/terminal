@@ -371,19 +371,14 @@ func (t *Terminal) run() {
 			fyne.LogError("pty read error", err)
 		}
 
-		lenLeftOver := len(leftOver)
-		fullBuf := buf
-		if lenLeftOver > 0 {
-			fullBuf = append(leftOver, buf[:num]...)
-			num += lenLeftOver
+		if len(leftOver) > 0 {
+			leftOver = t.handleOutput(append(leftOver, buf[:num]...))
+		} else {
+			leftOver = t.handleOutput(buf[:num])
 		}
-
-		fyne.DoAndWait(func() {
-			leftOver = t.handleOutput(fullBuf[:num])
-			if len(leftOver) == 0 {
-				t.Refresh()
-			}
-		})
+		if len(leftOver) == 0 {
+			fyne.DoAndWait(func() { t.Refresh() })
+		}
 	}
 }
 
