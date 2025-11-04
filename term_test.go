@@ -27,7 +27,7 @@ func TestExitCode(t *testing.T) {
 
 func testExitCodeN(t *testing.T, n int) {
 	term := New()
-	term.Resize(fyne.NewSize(45, 45))
+	term.ResizeNow(fyne.NewSize(45, 45))
 	go term.RunLocalShell()
 	err := errors.New("NotYet")
 	for err != nil {
@@ -48,7 +48,7 @@ func TestExitCode01(t *testing.T) {
 
 func TestTerminal_Resize(t *testing.T) {
 	term := New()
-	term.Resize(fyne.NewSize(45, 45))
+	term.ResizeNow(fyne.NewSize(45, 45))
 
 	assert.Equal(t, uint(5), term.config.Columns)
 	assert.Equal(t, uint(2), term.config.Rows)
@@ -118,7 +118,7 @@ func TestTerminal_SanitizePosition(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			term := New()
-			term.Resize(fyne.NewSize(float32(tt.width), float32(tt.height)))
+			term.ResizeNow(fyne.NewSize(float32(tt.width), float32(tt.height)))
 
 			got := term.sanitizePosition(tt.pos)
 

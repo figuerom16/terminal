@@ -287,7 +287,7 @@ func TestHandleOutput_NewLineMode(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			term := New()
-			term.Resize(fyne.NewSize(500, 500))
+			term.ResizeNow(fyne.NewSize(500, 500))
 
 			term.handleOutput([]byte(tt.input))
 

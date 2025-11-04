@@ -129,7 +129,7 @@ func TestDoubleTapped(t *testing.T) {
 	term := &Terminal{
 		content: grid,
 	}
-	term.Resize(fyne.NewSize(500, 500))
+	term.ResizeNow(fyne.NewSize(500, 500))
 
 	tests := map[string]struct {
 		clickPosition fyne.Position

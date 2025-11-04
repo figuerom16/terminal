@@ -911,7 +911,7 @@ func TestHandleOutput_24_bit_colour(t *testing.T) {
 func TestHandleOutput_BufferCutoff(t *testing.T) {
 	term := New()
 	termsize := fyne.NewSize(80, 50)
-	term.Resize(termsize)
+	term.ResizeNow(termsize)
 	term.handleOutput([]byte("\x1b[38;5;64"))
 	term.handleOutput([]byte("m40\x1b[38;5;65m41"))
 	tg := widget2.NewTermGrid()

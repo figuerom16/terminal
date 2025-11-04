@@ -233,34 +233,37 @@ func (t *Terminal) RemoveListener(listener chan Config) {
 }
 
 // Resize is called when this terminal widget has been resized.
-// It ensures that the virtual terminal is within the bounds of the widget.
+// It Debounces for ResizeNow.
 func (t *Terminal) Resize(s fyne.Size) {
 	if t.resizeTimer != nil {
 		t.resizeTimer.Stop()
 	}
-	t.resizeTimer = time.AfterFunc(resizeDebounce, func() {
-		cellSize := t.guessCellSize()
-		cols := uint(math.Floor(float64(s.Width) / float64(cellSize.Width)))
-		rows := uint(math.Floor(float64(s.Height) / float64(cellSize.Height)))
-		if (t.config.Columns == cols) && (t.config.Rows == rows) {
-			return
-		}
+	t.resizeTimer = time.AfterFunc(resizeDebounce, func() { t.ResizeNow(s) })
+}
 
-		t.BaseWidget.Resize(s)
-		if t.content != nil {
-			t.content.Resize(fyne.NewSize(float32(cols)*cellSize.Width, float32(rows)*cellSize.Height))
-		}
+// ResizeNow is manually called.
+// It ensures that the virtual terminal is within the bounds of the widget.
+func (t *Terminal) ResizeNow(s fyne.Size) {
+	cellSize := t.guessCellSize()
+	cols := uint(math.Floor(float64(s.Width) / float64(cellSize.Width)))
+	rows := uint(math.Floor(float64(s.Height) / float64(cellSize.Height)))
+	if (t.config.Columns == cols) && (t.config.Rows == rows) {
+		return
+	}
 
-		oldRows := int(t.config.Rows)
-		t.config.Columns, t.config.Rows = cols, rows
-		if t.scrollBottom == 0 || t.scrollBottom == oldRows-1 {
-			t.scrollBottom = int(t.config.Rows) - 1
-		}
-		t.onConfigure()
+	t.BaseWidget.Resize(s)
+	if t.content != nil {
+		t.content.Resize(fyne.NewSize(float32(cols)*cellSize.Width, float32(rows)*cellSize.Height))
+	}
 
-		t.updatePTYSize()
-	})
+	oldRows := int(t.config.Rows)
+	t.config.Columns, t.config.Rows = cols, rows
+	if t.scrollBottom == 0 || t.scrollBottom == oldRows-1 {
+		t.scrollBottom = int(t.config.Rows) - 1
+	}
+	t.onConfigure()
 
+	t.updatePTYSize()
 }
 
 // SetDebug turns on output about terminal codes and other errors if the parameter is `true`.

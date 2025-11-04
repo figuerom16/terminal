@@ -10,7 +10,7 @@ import (
 
 func TestTerminal_Backspace(t *testing.T) {
 	term := New()
-	term.Resize(fyne.NewSize(50, 50))
+	term.ResizeNow(fyne.NewSize(50, 50))
 	term.handleOutput([]byte("Hi"))
 	assert.Equal(t, "Hi", term.content.Text())
 

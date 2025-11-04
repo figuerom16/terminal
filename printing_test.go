@@ -78,7 +78,7 @@ func TestHandleOutput_Printing(t *testing.T) {
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
 			terminal := New()
-			terminal.Resize(fyne.NewSize(50, 50))
+			terminal.ResizeNow(fyne.NewSize(50, 50))
 			var spooledData []byte
 			terminal.printer = PrinterFunc(func(d []byte) {
 				spooledData = d
