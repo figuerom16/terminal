@@ -238,7 +238,7 @@ func (t *Terminal) Resize(s fyne.Size) {
 	if t.resizeTimer != nil {
 		t.resizeTimer.Stop()
 	}
-	t.resizeTimer = time.AfterFunc(resizeDebounce, func() { t.ResizeNow(s) })
+	t.resizeTimer = time.AfterFunc(resizeDebounce, func() { fyne.Do(func() { t.ResizeNow(s) }) })
 }
 
 // ResizeNow is manually called.
